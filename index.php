@@ -1,20 +1,17 @@
 <?php
+// Includo il file functions.php una sola volta utilizzando il percorso assoluto
+include_once __DIR__ . '/functions.php';
+
 // Logica di validazione dell'email
-$email = '';  // Inizializzo la variabile email come stringa vuota
-$emailValid = null;  // Inizializzo la variabile per tracciare la validità dell'email
+$email = '';
+$emailValid = null;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Se il form è stato inviato, prendo l'input email
     $email = $_POST["email"];
-    // Pulisco l'email per rimuovere caratteri non validi
-    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-
-    // Controllo se l'email contiene una "@" e un "."
-    if (strpos($email, '@') !== false && strpos($email, '.') !== false) {
-        $emailValid = true;  // L'email è valida
-    } else {
-        $emailValid = false;  // L'email non è valida
-    }
+    
+    // Verifico se l'email è valida usando la funzione dal file functions.php
+    $emailValid = isEmailValid($email);
 }
 ?>
 
