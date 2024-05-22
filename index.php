@@ -2,6 +2,11 @@
 // Includo il file functions.php una sola volta utilizzando il percorso assoluto
 include_once __DIR__ . '/functions.php';
 
+// Avvio della sessione se non è già avviata
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Logica di validazione dell'email
 $email = '';
 $emailValid = null;
@@ -12,6 +17,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Verifico se l'email è valida usando la funzione dal file functions.php
     $emailValid = isEmailValid($email);
+
+    if ($emailValid) {
+        // Memorizzo l'email nella sessione
+        $_SESSION['email'] = $email;
+        // Reindirizzo alla pagina di ringraziamento
+        header('Location: thankyou.php');
+        exit();
+    }
 }
 ?>
 
@@ -42,10 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </form>
 
                         <!-- Mostro il risultato della validazione -->
-                        <?php if ($emailValid === true): ?>
-                            <p class="text-success mt-3">L'indirizzo email è valido.</p>
-                        <?php elseif ($emailValid === false): ?>
-                            <p class="text-danger mt-3">L'indirizzo email non è valido. Assicurati che contenga una chiocciola (@) e un punto (.).</p>
+                        <?php if ($emailValid === false): ?>
+                            <div class="alert alert-danger mt-3">L'indirizzo email non è valido. Assicurati che contenga una chiocciola (@) e un punto (.).</div>
                         <?php endif; ?>
                     </div>
                 </div>
